@@ -1,0 +1,47 @@
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
+.viewer-container {
+  height: 100vh;
+
+  .signin-content {
+    width: 400px;
+  }
+}
+
+.play-button {
+  display: none !important;
+}
+
+.iui-table-row:hover .play-button{
+  display: flex !important;
+  cursor: pointer !important;
+}
+
+[aria-selected='true'] .play-button{
+  display: flex !important;
+  cursor: pointer !important;
+}
+
+.loading {
+  cursor :progress
+}
+
+.iui-checkbox::before{
+  border:none
+}
+
+.customModal {
+  min-height: 400px
+}
+
+.customModal .iui-table-header .iui-table-row .iui-table-cell{
+  background-color: var(--iui-color-background-accent-muted);
+  color : var(--iui-color-text-informational)
+}
+
+.iui-table-header .iui-table-row .iui-table-cell:hover {
+  background-color: var(--iui-color-background-accent-muted) !important;
+  color : var(--iui-color-text-informational)
+}

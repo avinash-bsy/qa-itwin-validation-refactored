@@ -6,12 +6,14 @@ import { useEffect, useMemo, useState } from "react";
 import { actions, ActionType } from "react-table";
 import { AbstractWidgetProps, StagePanelLocation, StagePanelSection, UiItemsProvider, WidgetState } from "@itwin/appui-abstract";
 import { useActiveIModelConnection } from "@itwin/appui-react";
-import { Table, DefaultCell, IconButton, Dialog, Modal } from "@itwin/itwinui-react";
+import { Table, DefaultCell, IconButton } from "@itwin/itwinui-react";
 import ClashReviewApi from "../configs/ClashReviewApi";
 import { useClashContext } from "../context/ClashContext";
 import { SvgPlay, SvgSync, SvgEdit, SvgAdd } from "@itwin/itwinui-icons-react";
 import "../App.scss";
-import ModalContent from "../components/ClashDetectionTestModal/ClashDetectionModalContent";
+import ClashDetectionTestModal from "../components/ClashDetectionTestModal";
+import { ClashDetectionTestProvider } from "../context/ClashDetectionTestContext";
+// import ModalContent from "../components/ClashDetectionTestModal/ClashDetectionModalContent";
 
 interface TableRow extends Record<string, string> {
 	name: string;
@@ -21,8 +23,8 @@ const ClashTestsWidget = () => {
 	const iModelConnection = useActiveIModelConnection();
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [isOpen, setIsOpen] = useState<boolean>(false);
-	const [currentTest, setCurrentTest] = useState<null | string>(null);
-	const [method, setMethod] = useState<"Create" | "Update">("Update");
+	const [currentTest, setCurrentTest] = useState<string>("");
+	const [method, setMethod] = useState<"create" | "update">("create");
 	const { clashTests, newRunRequested, setClashTests, setNewRunRequested, setTestId, setRuns, iModelId, iTwinId } = useClashContext();
 
 	const columnDefinition = useMemo(() => {
@@ -49,7 +51,7 @@ const ClashTestsWidget = () => {
 											onClick={(e) => {
 												setCurrentTest(props.cellProps.row.original.id);
 												setIsOpen(true);
-												setMethod("Update");
+												setMethod("update");
 											}}>
 											<SvgEdit />
 										</IconButton>
@@ -118,9 +120,9 @@ const ClashTestsWidget = () => {
 		}
 	};
 
-	const handleOnClose = () => {
+	const handleModalClose = () => {
 		setIsOpen(false);
-		setCurrentTest(null);
+		setCurrentTest("");
 		getClashTests(iModelConnection?.iTwinId!);
 	};
 
@@ -132,16 +134,11 @@ const ClashTestsWidget = () => {
 
 	return (
 		<>
-			{/* <IconButton style={{ right: 0, position: "absolute", zIndex: 1 }} onClick={(e) => setIsOpen(true)}>
-				<SvgAdd />
-				&nbsp;&nbsp; New
-			</IconButton> */}
-			{/* <div></div> */}
 			<IconButton
 				onClick={() => {
-					setCurrentTest(null);
+					setCurrentTest("");
 					setIsOpen(true);
-					setMethod("Create");
+					setMethod("create");
 				}}>
 				<SvgAdd />
 				&nbsp;&nbsp; New
@@ -164,19 +161,9 @@ const ClashTestsWidget = () => {
 				className={newRunRequested ? "loading" : ""}
 			/>
 			{isOpen && (
-				<Modal
-					style={{ width: "800px" }}
-					title={method === "Create" ? "Create Clash Detection Test" : "Modify Clash Detection Test"}
-					isOpen={true}
-					onClose={handleOnClose}
-					closeOnEsc
-					closeOnExternalClick
-					// preventDocumentScroll
-					// trapFocus
-					// setFocus
-					isDismissible>
-					<ModalContent method={method} currentTestId={currentTest} />
-				</Modal>
+				<ClashDetectionTestProvider>
+					<ClashDetectionTestModal method={method} handleModalClose={handleModalClose} selectedTestId={currentTest} />
+				</ClashDetectionTestProvider>
 			)}
 		</>
 	);

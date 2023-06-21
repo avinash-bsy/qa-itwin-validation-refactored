@@ -1,36 +1,27 @@
-import React, { useState, ChangeEvent, useEffect } from "react";
-import { SvgAdd } from "@itwin/itwinui-icons-react";
-import { Button, InputGroup, ToggleSwitch, LabeledInput } from "@itwin/itwinui-react";
-import SuppressionRulesModal from "../SuppressionRulesModal/SuppressionRulesModal";
-import { PageTypes } from "./ClashDetectionModalContent";
+import { Button, InputGroup, LabeledInput, ToggleSwitch } from "@itwin/itwinui-react";
+import { ChangeEvent, FunctionComponent, useState } from "react";
+import { TestDetails, useClashDetectionTestContext } from "../../context/ClashDetectionTestContext";
 
-interface AdvancedOptionProps {
-	testDetails: any;
-	setTestDetails: React.Dispatch<React.SetStateAction<any>>;
-	setCurrentPage: React.Dispatch<React.SetStateAction<PageTypes>>;
-}
+interface AdvancedOptionProps {}
 
-const AdvancedOptions = ({ testDetails, setTestDetails, setCurrentPage }: AdvancedOptionProps) => {
+const AdvancedOption: FunctionComponent<AdvancedOptionProps> = () => {
 	const [isSuppressionModalVisible, setIsSuppressionModalVisible] = useState<boolean>(false);
-
-	const toggleAdvanced = (event: ChangeEvent<HTMLInputElement>): void => {
-		if (!testDetails.advancedSettings) {
-			testDetails.advancedSettings = {};
-		}
-
-		testDetails.advancedSettings[event.target.name] = event.target.checked;
-		setTestDetails({ ...testDetails });
-	};
+	const { testDetails, setTestDetails } = useClashDetectionTestContext();
 
 	const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
-		testDetails[event.target.name] = event.target.name === "touchingTolerance" ? Number(event.target.value) : event.target.checked;
-		setTestDetails({ ...testDetails });
-	};
+		const eventName = event.target.name;
+		let modifiedTestDetails: TestDetails = Object.create(testDetails);
 
-	const closeSuppressionRulesModal = () => {
-		setIsSuppressionModalVisible(false);
-	};
+		if (eventName === "touchingTolerance") {
+			modifiedTestDetails[eventName] = Number(event.target.value);
+		} else if (eventName === "toleranceOverlapValidation") {
+			modifiedTestDetails.advancedSettings[eventName] = event.target.checked;
+		} else if (eventName === "suppressTouching") {
+			modifiedTestDetails[eventName] = event.target.checked;
+		}
 
+		setTestDetails(modifiedTestDetails);
+	};
 	return (
 		<>
 			<div style={{ padding: "10px 0px" }}>
@@ -42,29 +33,6 @@ const AdvancedOptions = ({ testDetails, setTestDetails, setCurrentPage }: Advanc
 					styleType="high-visibility">
 					Suppression Rules
 				</Button>
-
-				{/* <InputGroup displayStyle="inline" style={{ margin: "10px 0px" }}>
-					<ToggleSwitch
-						label="Include Reference Models"
-						checked={testDetails.includeSubModels}
-						name="includeSubModels"
-						onChange={handleChange}
-					/>
-					<ToggleSwitch
-						label="Allow long running clash test"
-						checked={testDetails.longClash}
-						name="longClash"
-						onChange={toggleAdvanced}
-					/>
-				</InputGroup> */}
-
-				{/* <ToggleSwitch
-					label="Calculate Overlap"
-					checked={testDetails.calculateOverlap}
-					style={{ margin: "10px 0px" }}
-					name="calculateOverlap"
-					onChange={toggleAdvanced}
-				/> */}
 				<InputGroup displayStyle="inline" style={{ margin: "10px 0px" }}>
 					<ToggleSwitch
 						label="Suppress Touching"
@@ -85,18 +53,12 @@ const AdvancedOptions = ({ testDetails, setTestDetails, setCurrentPage }: Advanc
 					label="Validate Touching Tolerance"
 					checked={testDetails.advancedSettings?.toleranceOverlapValidation}
 					name="toleranceOverlapValidation"
-					onChange={toggleAdvanced}
+					onChange={handleChange}
 				/>
 			</div>
-			{isSuppressionModalVisible && (
-				<SuppressionRulesModal
-					handleOnClose={closeSuppressionRulesModal}
-					testDetails={testDetails}
-					setTestDetails={setTestDetails}
-				/>
-			)}
+			{}
 		</>
 	);
 };
 
-export default AdvancedOptions;
+export default AdvancedOption;

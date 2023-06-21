@@ -1,13 +1,18 @@
-import React, { useMemo } from "react";
 import { Table } from "@itwin/itwinui-react";
+import { FunctionComponent, useMemo } from "react";
 
-interface MappingAndGroupingProps {
+interface MappingAndGroupingTabProps {
 	selectedMapAndGroups: Record<string, Array<string>>;
 	mapAndGroupsList: Array<any>;
 	setSelectedItems: (tab: "mappingAndGroupings", ids: any) => void;
 }
 
-const MappingAndGroupingTab = ({ selectedMapAndGroups, mapAndGroupsList, setSelectedItems }: MappingAndGroupingProps) => {
+const MappingAndGroupingTab: FunctionComponent<MappingAndGroupingTabProps> = ({
+	selectedMapAndGroups,
+	mapAndGroupsList,
+	setSelectedItems,
+}) => {
+	console.log({ selectedMapAndGroups, mapAndGroupsList, setSelectedItems });
 	const onSelect = (rows: any): void => {
 		let selectedRows: { [id: string]: Array<string> } = {};
 
@@ -67,21 +72,18 @@ const MappingAndGroupingTab = ({ selectedMapAndGroups, mapAndGroupsList, setSele
 		],
 		[]
 	);
-
 	return (
-		<>
-			<Table
-				emptyTableContent="No data."
-				isSelectable
-				isSortable
-				data={mapAndGroupsList}
-				columns={columns}
-				initialState={{
-					selectedRowIds: getSelectedRows(),
-				}}
-				onSelect={onSelect}
-			/>
-		</>
+		<Table
+			emptyTableContent="No data."
+			isSelectable
+			isSortable
+			data={mapAndGroupsList}
+			columns={columns}
+			initialState={{
+				selectedRowIds: getSelectedRows(),
+			}}
+			onSelect={onSelect}
+		/>
 	);
 };
 

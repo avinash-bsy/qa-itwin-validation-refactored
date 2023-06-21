@@ -1,13 +1,14 @@
-import React, { useState } from "react";
 import { Table } from "@itwin/itwinui-react";
+import { FunctionComponent } from "react";
 
-interface ModelComponentProps {
+interface ModelsTabProps {
 	selectedModels: Array<string>;
 	modelsList: Array<any>;
 	setSelectedItems: (tab: "models", ids: any) => void;
 }
 
-const ModelsTab = ({ selectedModels, modelsList, setSelectedItems }: ModelComponentProps) => {
+const ModelsTab: FunctionComponent<ModelsTabProps> = ({ selectedModels, modelsList, setSelectedItems }) => {
+	console.log({ selectedModels, modelsList, setSelectedItems });
 	const onSelect = (rows: any): void => {
 		let selectedRows: Array<string> = [];
 
@@ -20,7 +21,7 @@ const ModelsTab = ({ selectedModels, modelsList, setSelectedItems }: ModelCompon
 
 	const getSelectedRows = (): { [id: number]: boolean } => {
 		const selectedRowIds: { [id: number]: boolean } = {};
-		modelsList.map((model: any, index: number) => {
+		modelsList.forEach((model: any, index: number) => {
 			if (selectedModels.includes(model.id)) {
 				selectedRowIds[index] = true;
 			}

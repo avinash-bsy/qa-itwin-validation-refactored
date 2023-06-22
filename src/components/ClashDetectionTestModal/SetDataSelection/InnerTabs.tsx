@@ -1,18 +1,17 @@
 import { FunctionComponent, useCallback, useState } from "react";
-import { SetData, useClashDetectionTestContext } from "../../../context/ClashDetectionTestContext";
-import { Tab, Tabs } from "@itwin/itwinui-react";
+import { useClashDetectionTestContext } from "../../../context/ClashDetectionTestContext";
+import { Tab } from "@itwin/itwinui-react";
 import ModelsTab from "./ModelsTab";
 import CategoriesTab from "./CategoriesTab";
 import MappingAndGroupingTab from "./MappingAndGroupingTab";
 
 interface InnerTabsProps {
 	setData: Record<string, any>;
-	selectedDataItems: SetData;
+	selectedDataItems: any;
 }
 
 const InnerTabs: FunctionComponent<InnerTabsProps> = ({ setData, selectedDataItems }) => {
 	const [activeTab, setActiveTab] = useState<number>(0);
-	const { setStateData } = useClashDetectionTestContext();
 
 	const setTabSelectedItems = (tab: "models" | "categories" | "mappingAndGroupings", ids: any): void => {
 		// selectedItems[tab] = ids;
@@ -50,14 +49,15 @@ const InnerTabs: FunctionComponent<InnerTabsProps> = ({ setData, selectedDataIte
 	}, [activeTab]);
 
 	return (
-		<Tabs
-			type="borderless"
-			labels={[<Tab key={1} label="Models" />, <Tab key={2} label="Categories" />, <Tab key={3} label="Mapping And Grouping" />]}
-			onTabSelected={(index: number) => {
-				setActiveTab(index);
-			}}>
-			<div>{getContent()}</div>
-		</Tabs>
+		// <Tabs
+		// 	type="borderless"
+		// 	labels={[<Tab key={1} label="Models" />, <Tab key={2} label="Categories" />, <Tab key={3} label="Mapping And Grouping" />]}
+		// 	onTabSelected={(index: number) => {
+		// 		setActiveTab(index);
+		// 	}}>
+		// 	<div>{getContent()}</div>
+		// </Tabs>
+		<></>
 	);
 };
 

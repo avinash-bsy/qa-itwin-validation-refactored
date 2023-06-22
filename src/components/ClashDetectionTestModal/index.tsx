@@ -14,7 +14,7 @@ interface ClashDetectionTestModalProps {
 }
 
 const ClashDetectionTestModal: FunctionComponent<ClashDetectionTestModalProps> = ({ method, handleModalClose, selectedTestId }) => {
-	const { currentPage, testDetails, setTestDetails, setStateData } = useClashDetectionTestContext();
+	const { currentPage, testDetails, setTestDetails } = useClashDetectionTestContext();
 	const { iTwinId } = useClashContext();
 
 	const createClashDetectionTest = () => {
@@ -37,18 +37,6 @@ const ClashDetectionTestModal: FunctionComponent<ClashDetectionTestModalProps> =
 		const initApp = async () => {
 			const response = await ClashReviewApi.getClashTestDetailById(iTwinId, selectedTestId);
 			setTestDetails(response);
-			setStateData({
-				setA: {
-					models: response.setA?.modelIds || [],
-					categories: response.setA?.categoryIds || [],
-					mappingAndGroupings: convertStringtoObject(response.setA?.queries?.queryReference),
-				},
-				setB: {
-					models: response.setB?.modelIds || [],
-					categories: response.setB?.categoryIds || [],
-					mappingAndGroupings: convertStringtoObject(response.setB?.queries?.queryReference),
-				},
-			});
 		};
 
 		if (method === "update") {

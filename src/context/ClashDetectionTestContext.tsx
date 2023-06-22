@@ -42,11 +42,7 @@ const ClashDetectionTestContext = createContext<ClashDetectionTestType>({
 	setTestDetails: () => {},
 });
 
-interface PropsType {
-	children: FunctionComponent;
-}
-
-const ClashDetectionTestProvider: FunctionComponent = ({ children }: PropsType) => {
+const ClashDetectionTestProvider: FunctionComponent = ({ children }) => {
 	const [testDetails, setTestDetails] = useState<TestDetails>({
 		name: "",
 		description: "",

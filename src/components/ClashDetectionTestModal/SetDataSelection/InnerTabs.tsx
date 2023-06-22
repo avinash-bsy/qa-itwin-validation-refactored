@@ -1,6 +1,6 @@
 import { FunctionComponent, useCallback, useState } from "react";
 import { useClashDetectionTestContext } from "../../../context/ClashDetectionTestContext";
-import { Tab } from "@itwin/itwinui-react";
+import { Tab, Tabs } from "@itwin/itwinui-react";
 import ModelsTab from "./ModelsTab";
 import CategoriesTab from "./CategoriesTab";
 import MappingAndGroupingTab from "./MappingAndGroupingTab";
@@ -49,15 +49,14 @@ const InnerTabs: FunctionComponent<InnerTabsProps> = ({ setData, selectedDataIte
 	}, [activeTab]);
 
 	return (
-		// <Tabs
-		// 	type="borderless"
-		// 	labels={[<Tab key={1} label="Models" />, <Tab key={2} label="Categories" />, <Tab key={3} label="Mapping And Grouping" />]}
-		// 	onTabSelected={(index: number) => {
-		// 		setActiveTab(index);
-		// 	}}>
-		// 	<div>{getContent()}</div>
-		// </Tabs>
-		<></>
+		<Tabs
+			type="borderless"
+			labels={[<Tab key={1} label="Models" />, <Tab key={2} label="Categories" />, <Tab key={3} label="Mapping And Grouping" />]}
+			onTabSelected={(index: number) => {
+				setActiveTab(index);
+			}}>
+			<div>{getContent()}</div>
+		</Tabs>
 	);
 };
 

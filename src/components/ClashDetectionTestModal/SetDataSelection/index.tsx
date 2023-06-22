@@ -33,16 +33,21 @@ const SetDataSelection: FunctionComponent<SetDataSelectionProps> = () => {
 		initApp();
 	}, []);
 
+	const setData = {
+		models: [],
+		categories: [],
+		mappingAndGroupings: {},
+	};
+
 	return (
-		<></>
-		// <Tabs
-		// 	labels={[<Tab key={1} label="Set A" />, <Tab key={2} label="Set B" />]}
-		// 	onTabSelected={(index: number) => {
-		// 		setActiveTab(index === 0 ? "setA" : "setB");
-		// 	}}
-		// 	activeIndex={activeTab === "setA" ? 0 : 1}>
-		// 	{loading ? <ProgressLinear indeterminate={true} /> : <InnerTabs setData={[]} selectedDataItems={{}} />}
-		// </Tabs>
+		<Tabs
+			labels={[<Tab key={1} label="Set A" />, <Tab key={2} label="Set B" />]}
+			onTabSelected={(index: number) => {
+				setActiveTab(index === 0 ? "setA" : "setB");
+			}}
+			activeIndex={activeTab === "setA" ? 0 : 1}>
+			{loading ? <ProgressLinear indeterminate={true} /> : <InnerTabs setData={setData} selectedDataItems={setData} />}
+		</Tabs>
 	);
 };
 

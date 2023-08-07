@@ -1,5 +1,6 @@
 import { Table } from "@itwin/itwinui-react";
-import { FunctionComponent, useMemo } from "react";
+import { FunctionComponent, useCallback, useMemo, useRef } from "react";
+import { TableInstance, TableState } from "react-table";
 
 interface MappingAndGroupingTabProps {
 	selectedMapAndGroups: Record<string, Array<string>>;
@@ -12,7 +13,6 @@ const MappingAndGroupingTab: FunctionComponent<MappingAndGroupingTabProps> = ({
 	mapAndGroupsList,
 	setSelectedItems,
 }) => {
-	console.log({ selectedMapAndGroups, mapAndGroupsList, setSelectedItems });
 	const onSelect = (rows: any): void => {
 		let selectedRows: { [id: string]: Array<string> } = {};
 
@@ -72,6 +72,15 @@ const MappingAndGroupingTab: FunctionComponent<MappingAndGroupingTabProps> = ({
 		],
 		[]
 	);
+
+	const controlledState = useCallback(
+		(state: any) => {
+			state.selectedRowIds = getSelectedRows();
+		  return { ...state };
+		},
+		[selectedMapAndGroups]
+	);
+
 	return (
 		<Table
 			emptyTableContent="No data."
@@ -79,9 +88,7 @@ const MappingAndGroupingTab: FunctionComponent<MappingAndGroupingTabProps> = ({
 			isSortable
 			data={mapAndGroupsList}
 			columns={columns}
-			initialState={{
-				selectedRowIds: getSelectedRows(),
-			}}
+			useControlledState={controlledState}
 			onSelect={onSelect}
 		/>
 	);

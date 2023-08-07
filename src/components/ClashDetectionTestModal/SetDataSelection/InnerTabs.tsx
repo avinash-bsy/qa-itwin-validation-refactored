@@ -1,52 +1,23 @@
-import { FunctionComponent, useCallback, useState } from "react";
-import { useClashDetectionTestContext } from "../../../context/ClashDetectionTestContext";
+import { Dispatch, FunctionComponent, SetStateAction, useState } from "react";
 import { Tab, Tabs } from "@itwin/itwinui-react";
 import ModelsTab from "./ModelsTab";
 import CategoriesTab from "./CategoriesTab";
 import MappingAndGroupingTab from "./MappingAndGroupingTab";
+import { SetDataObject } from ".";
 
 interface InnerTabsProps {
 	setData: Record<string, any>;
 	selectedDataItems: any;
+	setSelectedDataItems: (data : SetDataObject) => void;
 }
 
-const InnerTabs: FunctionComponent<InnerTabsProps> = ({ setData, selectedDataItems }) => {
+const InnerTabs: FunctionComponent<InnerTabsProps> = ({ setData, selectedDataItems, setSelectedDataItems }) => {
 	const [activeTab, setActiveTab] = useState<number>(0);
 
 	const setTabSelectedItems = (tab: "models" | "categories" | "mappingAndGroupings", ids: any): void => {
-		// selectedItems[tab] = ids;
-		// selectedDataItems[tab] = ids;
-		// updateSelectedData(selectedDataItems);
+		selectedDataItems[tab] = ids;
+		setSelectedDataItems(selectedDataItems);
 	};
-
-	const getContent = useCallback(() => {
-		switch (activeTab) {
-			case 0:
-				return (
-					<ModelsTab
-						selectedModels={selectedDataItems.models}
-						modelsList={setData.models}
-						setSelectedItems={setTabSelectedItems}
-					/>
-				);
-			case 1:
-				return (
-					<CategoriesTab
-						selectedCategories={selectedDataItems.categories}
-						categoriesList={setData.categories}
-						setSelectedItems={setTabSelectedItems}
-					/>
-				);
-			case 2:
-				return (
-					<MappingAndGroupingTab
-						selectedMapAndGroups={selectedDataItems.mappingAndGroupings}
-						mapAndGroupsList={setData.mappingAndGroupings}
-						setSelectedItems={setTabSelectedItems}
-					/>
-				);
-		}
-	}, [activeTab]);
 
 	return (
 		<Tabs
@@ -54,8 +25,29 @@ const InnerTabs: FunctionComponent<InnerTabsProps> = ({ setData, selectedDataIte
 			labels={[<Tab key={1} label="Models" />, <Tab key={2} label="Categories" />, <Tab key={3} label="Mapping And Grouping" />]}
 			onTabSelected={(index: number) => {
 				setActiveTab(index);
-			}}>
-			<div>{getContent()}</div>
+			}}
+		>
+			{activeTab === 0 && 
+				<ModelsTab
+					selectedModels={selectedDataItems.models || []}
+					modelsList={setData.models}
+					setSelectedItems={setTabSelectedItems}
+				/>
+			}
+			{activeTab === 1 && 
+				<CategoriesTab
+					selectedCategories={selectedDataItems.categories || []}
+					categoriesList={setData.categories}
+					setSelectedItems={setTabSelectedItems}
+				/>
+			}
+			{activeTab === 2 && 
+				<MappingAndGroupingTab
+					selectedMapAndGroups={selectedDataItems.mappingAndGroupings || {}}
+					mapAndGroupsList={setData.mappingAndGroupings}
+					setSelectedItems={setTabSelectedItems}
+				/>
+			}
 		</Tabs>
 	);
 };

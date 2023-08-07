@@ -6,7 +6,7 @@ import { SvgGoToEnd } from "@itwin/itwinui-icons-react";
 interface NameDescriptionScreenProps {}
 
 const NameDescriptionScreen: FunctionComponent<NameDescriptionScreenProps> = ({}) => {
-	const { testDetails, setTestDetails, currentPage, setCurrentPage } = useClashDetectionTestContext();
+	const { testDetails, setTestDetails} = useClashDetectionTestContext();
 
 	const handleInput = (event: ChangeEvent<HTMLInputElement>): void => {
 		let modifiedTestDetails = { ...testDetails, [event.target.name]: event.target.value };

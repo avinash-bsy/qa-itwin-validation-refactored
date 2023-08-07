@@ -1,10 +1,22 @@
 import React, { Dispatch, FunctionComponent, SetStateAction, createContext, useContext, useState } from "react";
 
+interface SetData {
+	modelIds? : string[];
+	categoryIds? : string[];
+	queries? : {
+		type : number,
+		queryReference : string
+	};
+	selfCheck : boolean;
+	clearance : number;
+}
 export interface TestDetails {
 	name: string;
 	description: string;
 	configType: number;
 	includeSubModels: boolean;
+	setA : SetData;
+	setB : SetData;
 	advancedSettings: {
 		longClash: boolean;
 		calculateOverlap: boolean;
@@ -34,6 +46,14 @@ const ClashDetectionTestContext = createContext<ClashDetectionTestType>({
 			calculateOverlap: true,
 			toleranceOverlapValidation: false,
 		},
+		setA : {
+			selfCheck : true,
+			clearance : 0,
+		},
+		setB : {
+			selfCheck : true,
+			clearance : 0,
+		},
 		suppressTouching: false,
 		touchingTolerance: 0,
 	},
@@ -48,6 +68,14 @@ const ClashDetectionTestProvider: FunctionComponent = ({ children }) => {
 		description: "",
 		configType: 2,
 		includeSubModels: true,
+		setA : {
+			selfCheck : true,
+			clearance : 0,
+		},
+		setB : {
+			selfCheck : true,
+			clearance : 0,
+		},
 		advancedSettings: {
 			longClash: true,
 			calculateOverlap: true,

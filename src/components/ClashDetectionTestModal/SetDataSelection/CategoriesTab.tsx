@@ -1,5 +1,5 @@
 import { Table } from "@itwin/itwinui-react";
-import { FunctionComponent, useMemo } from "react";
+import { FunctionComponent, useCallback, useMemo } from "react";
 
 interface CategoriesTabProps {
 	selectedCategories: Array<string>;
@@ -8,7 +8,6 @@ interface CategoriesTabProps {
 }
 
 const CategoriesTab: FunctionComponent<CategoriesTabProps> = ({ selectedCategories, setSelectedItems, categoriesList }) => {
-	console.log({ selectedCategories, setSelectedItems, categoriesList });
 	const onSelect = (rows: any): void => {
 		let selectedRows: Array<string> = [];
 
@@ -29,6 +28,7 @@ const CategoriesTab: FunctionComponent<CategoriesTabProps> = ({ selectedCategori
 
 		return selectedRowIds;
 	};
+
 	const columns = useMemo(
 		() => [
 			{
@@ -40,6 +40,14 @@ const CategoriesTab: FunctionComponent<CategoriesTabProps> = ({ selectedCategori
 		[]
 	);
 
+	const controlledState = useCallback(
+		(state: any) => {
+			state.selectedRowIds = getSelectedRows();
+		  return { ...state };
+		},
+		[selectedCategories]
+	);
+
 	return (
 		<Table
 			columns={columns}
@@ -47,9 +55,7 @@ const CategoriesTab: FunctionComponent<CategoriesTabProps> = ({ selectedCategori
 			emptyTableContent="No data."
 			isSelectable={true}
 			onSelect={onSelect}
-			initialState={{
-				selectedRowIds: getSelectedRows(),
-			}}
+			useControlledState={controlledState}
 			selectionMode="multi"
 		/>
 	);

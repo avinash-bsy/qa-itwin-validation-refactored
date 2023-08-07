@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { useEffect, useMemo, useState } from "react";
 import { actions, ActionType } from "react-table";
-import { AbstractWidgetProps, StagePanelLocation, StagePanelSection, UiItemsProvider, WidgetState } from "@itwin/appui-abstract";
+import { StagePanelLocation, StagePanelSection, UiItemsProvider, WidgetState, Widget } from "@itwin/appui-react";
 import { useActiveIModelConnection } from "@itwin/appui-react";
 import { Table, DefaultCell, IconButton } from "@itwin/itwinui-react";
 import ClashReviewApi from "../configs/ClashReviewApi";
@@ -177,14 +177,14 @@ export class ClashTestsWidgetProvider implements UiItemsProvider {
 		_stageUsage: string,
 		location: StagePanelLocation,
 		_section?: StagePanelSection
-	): ReadonlyArray<AbstractWidgetProps> {
-		const widgets: AbstractWidgetProps[] = [];
+	): ReadonlyArray<Widget> {
+		const widgets: Widget[] = [];
 		if (location === StagePanelLocation.Left && _section === StagePanelSection.Start) {
 			widgets.push({
 				id: "ClashTestsWidget",
 				label: "Tests",
 				defaultState: WidgetState.Open,
-				getWidgetContent: () => <ClashTestsWidget />,
+				content: <ClashTestsWidget />,
 			});
 		}
 		return widgets;

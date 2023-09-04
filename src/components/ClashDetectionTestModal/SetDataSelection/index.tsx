@@ -1,23 +1,25 @@
 import { ProgressLinear, Tab, Tabs } from "@itwin/itwinui-react";
-import { FunctionComponent, useEffect, useState } from "react";
+import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from "react";
 import { useClashDetectionTestContext } from "../../../context/ClashDetectionTestContext";
 import InnerTabs from "./InnerTabs";
 import { useClashContext } from "../../../context/ClashContext";
 import ClashReviewApi from "../../../configs/ClashReviewApi";
 import { convertStringtoObject } from "..";
 
-interface SetDataSelectionProps {}
+interface SetDataSelectionProps {
+	setSelectedDataItems : Dispatch<SetStateAction<Record<"setA" | "setB", SetDataObject>>>;
+	selectedDataItems : Record<"setA" | "setB", SetDataObject>
+}
 export interface SetDataObject {
 	models? : string[];
 	categories? : string[];
 	mappingAndGroupings? : Record<string, string[]>;
 }
 
-const SetDataSelection: FunctionComponent<SetDataSelectionProps> = () => {
+const SetDataSelection: FunctionComponent<SetDataSelectionProps> = ({setSelectedDataItems, selectedDataItems}) => {
 	const [activeTab, setActiveTab] = useState<"setA" | "setB">("setA");
 	const [loading, setLoading] = useState<boolean>(true);
 	const [selectableDataItems, setSelectableDataItems] = useState<Record<string, any>>({});
-	const [selectedDataItems, setSelectedDataItems] = useState<Record<"setA" | "setB", SetDataObject>>({setA : {}, setB : {}});
 	const { iModelId, iTwinId } = useClashContext();
 	const { testDetails } = useClashDetectionTestContext();
 
@@ -70,20 +72,6 @@ const SetDataSelection: FunctionComponent<SetDataSelectionProps> = () => {
 				const { models, categories } = modelAndCategories;
 				const mappingAndGroupings = await ClashReviewApi.getMappingAndGrouping(iModelId);
 
-				setSelectedDataItems(
-					{
-						setA : {
-							models : testDetails.setA.modelIds || [],
-							categories : testDetails.setA.categoryIds || [],
-							mappingAndGroupings: testDetails.setA.queries ? convertStringtoObject(testDetails.setA.queries?.queryReference!) : {}
-						},
-						setB : {
-							models : testDetails.setB.modelIds || [],
-							categories : testDetails.setB.categoryIds || [],
-							mappingAndGroupings: testDetails.setB.queries ? convertStringtoObject(testDetails.setB.queries?.queryReference!) : {}
-						}
-					}
-				)
 				setSelectableDataItems({ models, categories, mappingAndGroupings });
 			} catch (error) {
 				console.log(error);

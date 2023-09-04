@@ -417,6 +417,17 @@ export default class ClashReviewApi extends HelperMethods {
 		return responseData
 	}
 
+	public static async getNotificationRegisterationDetails() {
+		const response = await fetch(`${ClashReviewApi._RMS_BASE_URL}/registernotification/${process.env.REACT_APP_IMJS_AUTH_CLIENT_CLIENT_ID}`, {
+			headers: {
+				Authorization: ClashReviewApi._accessToken,
+			},
+		})
+
+		const responseData = await response.json()
+		return responseData
+	}
+
 	public static visualizeClash(elementAId: string, elementBId: string, isMarkerClick: boolean) {
 		if (!IModelApp.viewManager.selectedView) return;
 

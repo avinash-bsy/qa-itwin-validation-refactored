@@ -1,4 +1,4 @@
-import React, { Dispatch, FunctionComponent, SetStateAction, createContext, useContext, useState } from "react";
+import React, { Dispatch, FunctionComponent, SetStateAction, createContext, useContext, useEffect, useState } from "react";
 
 interface SetData {
 	modelIds? : string[];
@@ -24,9 +24,10 @@ export interface TestDetails {
 	};
 	suppressTouching: boolean;
 	touchingTolerance: number;
+	suppressionRules: string[];
 }
 
-type PageType = "nameDescription" | "setSelection" | "advancedOptions";
+type PageType = "nameDescription" | "setSelection" | "advancedOptions" | "suppressionRules";
 
 interface ClashDetectionTestType {
 	testDetails: TestDetails;
@@ -56,6 +57,7 @@ const ClashDetectionTestContext = createContext<ClashDetectionTestType>({
 		},
 		suppressTouching: false,
 		touchingTolerance: 0,
+		suppressionRules: []
 	},
 	currentPage: "nameDescription",
 	setCurrentPage: () => {},
@@ -83,6 +85,7 @@ const ClashDetectionTestProvider: FunctionComponent = ({ children }) => {
 		},
 		suppressTouching: false,
 		touchingTolerance: 0,
+		suppressionRules: []
 	});
 	const [currentPage, setCurrentPage] = useState<PageType>("nameDescription");
 
@@ -92,6 +95,10 @@ const ClashDetectionTestProvider: FunctionComponent = ({ children }) => {
 		setCurrentPage,
 		setTestDetails,
 	};
+
+	useEffect(() => {
+		console.log(testDetails)
+	}, [testDetails])
 
 	return <ClashDetectionTestContext.Provider value={contextValues}>{children}</ClashDetectionTestContext.Provider>;
 };

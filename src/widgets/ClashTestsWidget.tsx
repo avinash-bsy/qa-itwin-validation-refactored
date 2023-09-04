@@ -13,7 +13,6 @@ import { SvgPlay, SvgSync, SvgEdit, SvgAdd } from "@itwin/itwinui-icons-react";
 import "../App.scss";
 import ClashDetectionTestModal from "../components/ClashDetectionTestModal";
 import { ClashDetectionTestProvider } from "../context/ClashDetectionTestContext";
-// import ModalContent from "../components/ClashDetectionTestModal/ClashDetectionModalContent";
 
 interface TableRow extends Record<string, string> {
 	name: string;

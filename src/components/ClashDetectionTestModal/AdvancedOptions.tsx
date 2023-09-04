@@ -5,30 +5,29 @@ import { TestDetails, useClashDetectionTestContext } from "../../context/ClashDe
 interface AdvancedOptionProps {}
 
 const AdvancedOption: FunctionComponent<AdvancedOptionProps> = () => {
-	const [isSuppressionModalVisible, setIsSuppressionModalVisible] = useState<boolean>(false);
-	const { testDetails, setTestDetails } = useClashDetectionTestContext();
+	const { testDetails, setTestDetails, setCurrentPage} = useClashDetectionTestContext();
 
 	const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
 		const eventName = event.target.name;
-		let modifiedTestDetails: TestDetails = Object.create(testDetails);
-
+		
 		if (eventName === "touchingTolerance") {
-			modifiedTestDetails[eventName] = Number(event.target.value);
+			testDetails[eventName] = Number(event.target.value);
 		} else if (eventName === "toleranceOverlapValidation") {
-			modifiedTestDetails.advancedSettings[eventName] = event.target.checked;
+			testDetails.advancedSettings[eventName] = event.target.checked;
 		} else if (eventName === "suppressTouching") {
-			modifiedTestDetails[eventName] = event.target.checked;
+			testDetails[eventName] = event.target.checked;
 		}
 
-		setTestDetails(modifiedTestDetails);
+		setTestDetails({...testDetails});
 	};
+
 	return (
 		<>
 			<div style={{ padding: "10px 0px" }}>
 				<Button
 					style={{ margin: "10px 0px" }}
 					onClick={() => {
-						setIsSuppressionModalVisible(true);
+						setCurrentPage("suppressionRules");
 					}}
 					styleType="high-visibility">
 					Suppression Rules

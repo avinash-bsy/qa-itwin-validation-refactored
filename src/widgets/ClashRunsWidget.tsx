@@ -9,6 +9,7 @@ import { Table, DefaultCell, IconButton, ExpandableBlock } from "@itwin/itwinui-
 import { useClashContext } from "../context/ClashContext";
 import ClashReviewApi from "../configs/ClashReviewApi";
 import { SvgGoToStart, SvgHistory } from "@itwin/itwinui-icons-react";
+import "./ClashRunsWidget.scss"
 
 interface TableRow extends Record<string, string> {
 	time: string;
@@ -17,7 +18,6 @@ interface TableRow extends Record<string, string> {
 
 const ClashRunsWidget = () => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const [currentPage, setCurrentPage] = useState<"runsWidget" | "clashHistory">("runsWidget")
 	const { runs, setRuns, setNewRunRequested, setClashResults, runId, testId, setRunId, iTwinId } = useClashContext();
 
 	const getJobStatusText = useCallback((jobStatus: string) => {
@@ -57,16 +57,7 @@ const ClashRunsWidget = () => {
 						cellRenderer: (props: any) => (
 							<DefaultCell {...props}>{getJobStatusText(props.cellProps.row.original.job_status)}</DefaultCell>
 						),
-					},
-					// {
-					// 	Header: 'Action',
-					// 	Cell: (props: any) => {
-					// 		return <IconButton styleType="borderless" onClick={() => {
-					// 			setCurrentPage("clashHistory")
-					// 		}}><SvgHistory />
-					// 		</IconButton>
-					// 	}
-					// }
+					}
 				],
 			},
 		],
@@ -122,36 +113,6 @@ const ClashRunsWidget = () => {
 		};
 	}, [runId]);
 
-	const historyColumnDefinition = [{
-		Header: "Table",
-		columns: [
-			{
-				Header: "Changeset",
-				accessor: "changesetName"
-
-			},
-			{
-				Header: "New",
-				accessor: "status.new",
-			},
-			{
-				Header: "Open",
-				accessor: "status.open",
-			},
-			{
-				Header: "Resolved",
-				accessor: "status.resolved"
-			},
-			{
-				Header: "Time",
-				accessor: "executedAt",
-				cellRenderer: (props: any) => (
-					<DefaultCell {...props}>{new Date(props.cellProps.row.original.executedAt).toLocaleDateString()}</DefaultCell>
-				),
-			}
-		]
-	}]
-
 	const onExpand = () => {
 	}
 
@@ -162,45 +123,23 @@ const ClashRunsWidget = () => {
 	}, [testId]);
 
 	return (
-		<div>
-			{
-				currentPage === "runsWidget" && <Table<TableRow>
-					data={runs}
-					columns={columnDefinition}
-					onRowClick={onRowClick}
-					isLoading={isLoading}
-					initialState={{
-						selectedRowIds: {
-							0: true,
-						},
-					}}
-					stateReducer={tableStateSingleSelectReducer}
-					emptyTableContent={"No runs"}
-					density="extra-condensed"
-					style={{ height: "100%" }}
-					subComponent={ClashHistory}
-					onExpand={onExpand}
-				/>
-			}
-			{
-				currentPage === "clashHistory" && <div>
-					{/* <IconButton 
-						onClick={() => {
-							setCurrentPage("runsWidget")
-						}} 
-						styleType="borderless"
-					>
-						<SvgGoToStart style={{ height: 22, width: 22 }} />
-					</IconButton>
-					<Table
-						data={clashHistory}
-						columns={historyColumnDefinition}
-						emptyTableContent={"No history"}
-						density="extra-condensed"
-					/> */}
-				</div>
-			}
-		</div>
+		<Table<TableRow>
+				data={runs}
+				columns={columnDefinition}
+				onRowClick={onRowClick}
+				isLoading={isLoading}
+				initialState={{
+					selectedRowIds: {
+						0: true,
+					},
+				}}
+				stateReducer={tableStateSingleSelectReducer}
+				emptyTableContent={"No runs"}
+				density="extra-condensed"
+				style={{ height: "100%" }}
+				subComponent={ClashHistory}
+				onExpand={onExpand}
+		/>
 		
 	);
 };
@@ -229,82 +168,38 @@ export class ClashRunsWidgetProvider implements UiItemsProvider {
 
 const ClashHistory = (row:any) => {
 	const {iTwinId} = useClashContext()
-	const clashHistory = useMemo(() => [
-        {
-            "testRunId": "+njd+O6c/55j7MK4E9efqA==",
-            "reportId": "54afd334-cd72-48e4-b104-3f537d68e845",
-            "executedAt": "2023-06-27T14:07:25.353Z",
-            "changesetId": "307ee154e1c5e394c26793265ae353cc898979c5",
-            "changesetName": "Latest",
-            "namedVersionId": "19b5d021-ebe0-4029-b366-7ff4aee338af",
-            "status": {
-                "new": 0,
-                "open": 25,
-                "resolved": 0
-            },
-            "configurationType": 2
-        },
-        {
-            "testRunId": "FlXYcUOF6+CAp1KkbFv8DA==",
-            "reportId": "54afd334-cd72-48e4-b104-3f537d68e845",
-            "executedAt": "2023-06-27T13:58:12.536Z",
-            "changesetId": "307ee154e1c5e394c26793265ae353cc898979c5",
-            "changesetName": "Latest",
-            "namedVersionId": "19b5d021-ebe0-4029-b366-7ff4aee338af",
-            "status": {
-                "new": 0,
-                "open": 25,
-                "resolved": 0
-            },
-            "configurationType": 2
-        },
-        {
-            "testRunId": "RfCWDgZO4/2AwjcyJmJ2Cw==",
-            "reportId": "54afd334-cd72-48e4-b104-3f537d68e845",
-            "executedAt": "2023-06-23T06:37:06.131Z",
-            "changesetId": "307ee154e1c5e394c26793265ae353cc898979c5",
-            "changesetName": "Latest",
-            "namedVersionId": "19b5d021-ebe0-4029-b366-7ff4aee338af",
-            "status": {
-                "new": 0,
-                "open": 25,
-                "resolved": 0
-            },
-            "configurationType": 2
-        }
-    ], [])
+	const [clashHistory, setClashHistory] = useState([])
 
 	useEffect(() => {
 		const initApp = async () => {
-			const clashHistory = await ClashReviewApi.getClashEvolutionDetails(iTwinId, "2892620a-a9b3-4f2a-bb9e-c1012ee1ce9c")
-			console.log(clashHistory)
+			const clashHistory = await ClashReviewApi.getClashEvolutionDetails(iTwinId, row.original.id)
+			setClashHistory(clashHistory.rows)
 		}
 
 		initApp()
 	}, [])
 
 	return <div style={{width:"100%"}}>
-		{
-			clashHistory.map((row:any) => (
-				<div key={row.testRunId} >
-					<ExpandableBlock title={new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'medium'}).format(new Date(row.executedAt))} style={{width:"90%", margin:"auto"}}>
-						<span style={{fontSize:"16px"}}><strong>{row.changesetName}</strong></span>
-						<hr />
-						<table style={{width : "100%"}}>
-							<tr>
-								<th style={{textAlign:"center"}}>New</th>
-								<th style={{textAlign:"center"}}>Open</th>
-								<th style={{textAlign:"center"}}>Resolved</th>
-							</tr>
-							<tr>
-								<td style={{textAlign:"center"}}>{row.status.new}</td>
-								<td style={{textAlign:"center"}}>{row.status.open}</td>
-								<td style={{textAlign:"center"}}>{row.status.resolved}</td>
-							</tr>
-						</table>
-					</ExpandableBlock>
-				</div>
-			))
-		}
+		<table style={{width : "100%"}}>
+			<tr>
+				<th>Date Executed</th>
+				<th>Changeset</th>
+				<th>New</th>
+				<th>Open</th>
+				<th>Resolved</th>
+			</tr>
+			{
+				clashHistory.map((row:any, index:number) => (
+					<tr key={index}>
+						<td>{new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'medium'}).format(new Date(row.executedAt))}</td>
+						<td>{row.changesetName}</td>
+						<td>{row.status.new}</td>
+						<td>{row.status.open}</td>
+						<td>{row.status.resolved}</td>
+					</tr>
+				))
+			}
+		</table>
 	</div>
 }
+

@@ -72,6 +72,11 @@ const SelectRuleTemplates = ({ setSelectedRuleTemplate, selectedRuleTemplate }: 
 				emptyTableContent="No rule templates"
 				isSelectable={true}
 				isLoading={loading}
+				// onSelect={handleSelect}
+				initialState={{
+					selectedRowIds: getSelectedRows(),
+				}}
+				onRowClick={handleRowClick}
 				selectionMode="single"
 			/>
 		</div>

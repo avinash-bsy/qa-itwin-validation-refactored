@@ -48,14 +48,14 @@ const CDTestModalFooter: FunctionComponent<CDTestModalFooterProps> = ({ method, 
 				)}
 			</div>
 			<div>
-				{currentPage !== "setSelection" ? (
+				{currentPage === "advancedOptions" || currentPage === "setSelection" ? (
+					<IconButton styleType="high-visibility" onClick={actionHandler}>
+					<SvgSave />
+					&nbsp; {method === "create" ? "Create" : "Update"}
+				</IconButton>
+				) : (
 					<IconButton onClick={handleNext}>
 						<SvgGoToEnd style={{ height: 25, width: 25 }} />
-					</IconButton>
-				) : (
-					<IconButton styleType="high-visibility" onClick={actionHandler}>
-						<SvgSave />
-						&nbsp; {method === "create" ? "Create" : "Update"}
 					</IconButton>
 				)}
 			</div>
